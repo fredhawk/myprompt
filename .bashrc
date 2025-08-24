@@ -414,12 +414,11 @@ up() {
 }
 
 # Automatically do an ls after each cd, z, or zoxide
-cd ()
-{
+cd() {
 	if [ -n "$1" ]; then
-		builtin cd "$@" && ls
+		builtin cd "$@" && ll
 	else
-		builtin cd ~ && ls
+		builtin cd ~ && ll
 	fi
 }
 

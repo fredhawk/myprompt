@@ -9,7 +9,7 @@ To install the .bashrc configuration, execute the following commands in your ter
 
 ```sh
 git clone --depth=1 https://github.com/fredhawk/myprompt.git
-cd mybash
+cd myprompt
 ./setup.sh
 ```
 
@@ -27,7 +27,7 @@ Ensure you have the required permissions and a supported package manager before 
 To uninstall the .bashrc configuration, run:
 
 ```sh
-cd mybash
+cd myprompt
 chmod +x uninstall.sh
 ./uninstall.sh
 ```

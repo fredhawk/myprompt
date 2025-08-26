@@ -123,7 +123,7 @@ setup_directories() {
 
 # Installation functions
 install_packages() {
-    local packages="bash bash-completion tar bat tree multitail wget unzip fontconfig"
+    local packages="bash bash-completion tar bat tree multitail fastfetch wget unzip fontconfig"
     if ! command_exists nvim; then
         packages="$packages neovim"
         fi
@@ -145,7 +145,7 @@ install_packages() {
             $PRIVILEGE_CMD $PACKAGE_MANAGER install -y $packages
             ;;
         emerge)
-            local emerge_packages="app-shells/bash app-shells/bash-completion app-arch/tar sys-apps/bat app-text/tree app-text/multitail app-misc/trash-cli"
+            local emerge_packages="app-shells/bash app-shells/bash-completion app-arch/tar sys-apps/bat app-text/tree app-text/multitail app-misc/fastfetch app-misc/trash-cli"
             if ! command_exists nvim; then
                 emerge_packages="$emerge_packages app-editors/neovim"
     fi
@@ -155,7 +155,7 @@ install_packages() {
             $PRIVILEGE_CMD $PACKAGE_MANAGER -Sy $packages
             ;;
         nix-env)
-            local nix_packages="nixos.bash nixos.bash-completion nixos.gnutar nixos.bat nixos.tree nixos.multitail nixos.trash-cli"
+            local nix_packages="nixos.bash nixos.bash-completion nixos.gnutar nixos.bat nixos.tree nixos.multitail nixos.fastfetch nixos.trash-cli"
             if ! command_exists nvim; then
                 nix_packages="$nix_packages nixos.neovim"
         fi
@@ -176,23 +176,23 @@ install_arch_packages() {
     local aur_helper=""
     
     # Install AUR helper if needed
-    if command_exists paru; then
-        aur_helper="paru"
-    elif command_exists yay; then
+    if command_exists yay; then
         aur_helper="yay"
+    elif command_exists paru; then
+        aur_helper="paru"
     else
-        log_info "Installing paru AUR helper..."
+        log_info "Installing yay AUR helper..."
         $PRIVILEGE_CMD pacman -S --needed --noconfirm base-devel git
         
         local temp_dir
         temp_dir=$(mktemp -d)
         cd "$temp_dir"
-        git clone https://aur.archlinux.org/paru.git
-        cd paru
+        git clone https://aur.archlinux.org/yay.git
+        cd yay
         makepkg -si --noconfirm
         cd "$MYBASH_DIR"
         rm -rf "$temp_dir"
-        aur_helper="paru"
+        aur_helper="yay"
     fi
     
     log_info "Installing packages with $aur_helper..."
@@ -275,6 +275,23 @@ install_zoxide() {
     fi
 }
 
+# Configuration functions
+setup_fastfetch_config() {
+    local user_home
+    user_home=$(get_user_home)
+    local fastfetch_dir="$user_home/.config/fastfetch"
+    local config_file="$fastfetch_dir/config.jsonc"
+    
+    mkdir -p "$fastfetch_dir"
+    
+    if [ -f "$SCRIPT_DIR/config.jsonc" ]; then
+        ln -sf "$SCRIPT_DIR/config.jsonc" "$config_file"
+        log_success "Fastfetch config linked"
+    else
+        log_warning "Fastfetch config file not found"
+    fi
+}
+
 setup_bash_config() {
     local user_home
     user_home=$(get_user_home)
@@ -318,7 +335,7 @@ EOF
 
 # Main execution
 main() {
-    log_info "Starting MyPrompt setup..."
+    log_info "Starting Linux Toolbox setup..."
     
     # Validation phase
     validate_requirements || exit 1
@@ -339,6 +356,7 @@ main() {
     install_zoxide || exit 1
     
     # Configuration phase
+    setup_fastfetch_config
     setup_bash_config || exit 1
     
     log_success "Setup completed successfully!"

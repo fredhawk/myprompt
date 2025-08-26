@@ -176,23 +176,23 @@ install_arch_packages() {
     local aur_helper=""
     
     # Install AUR helper if needed
-    if command_exists yay; then
-        aur_helper="yay"
-    elif command_exists paru; then
+    if command_exists paru; then
         aur_helper="paru"
+    elif command_exists yay; then
+        aur_helper="yay"
     else
-        log_info "Installing yay AUR helper..."
+        log_info "Installing paru AUR helper..."
         $PRIVILEGE_CMD pacman -S --needed --noconfirm base-devel git
         
         local temp_dir
         temp_dir=$(mktemp -d)
         cd "$temp_dir"
-        git clone https://aur.archlinux.org/yay.git
-        cd yay
+        git clone https://aur.archlinux.org/paru.git
+        cd paru
         makepkg -si --noconfirm
         cd "$MYBASH_DIR"
         rm -rf "$temp_dir"
-        aur_helper="yay"
+        aur_helper="paru"
     fi
     
     log_info "Installing packages with $aur_helper..."

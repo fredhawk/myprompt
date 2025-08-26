@@ -19,7 +19,7 @@ readonly PACKAGES=(
     'bat'
     'tree'
     'multitail'
-    'fastfetch'
+    # 'fastfetch'
     'neovim'
     'trash-cli'
 )
@@ -99,7 +99,7 @@ remove_packages() {
                 "sys-apps/bat"
                 "app-text/tree"
                 "app-text/multitail"
-                "app-misc/fastfetch"
+                # "app-misc/fastfetch"
                 "app-editors/neovim"
                 "app-misc/trash-cli"
             )
@@ -188,7 +188,7 @@ restore_configurations() {
     # Remove configuration files
     local config_files=(
         "$user_home/.config/starship.toml"
-        "$user_home/.config/fastfetch/config.jsonc"
+        # "$user_home/.config/fastfetch/config.jsonc"
     )
     
     for config_file in "${config_files[@]}"; do
@@ -206,7 +206,7 @@ cleanup_project_directory() {
 }
 
 main() {
-    log "INFO" "Starting Linux Toolbox uninstallation..."
+    log "INFO" "Starting MyPrompt uninstallation..."
     detect_package_manager
     detect_privilege_escalation
     

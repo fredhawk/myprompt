@@ -183,6 +183,9 @@ alias l='ls -CF'
 alias lt='ls -ltr'
 alias lh='ls -lh'
 alias tree='tree -C'
+# Eza
+alias e="eza --icons -F -H --group-directories-first --git -1 -al"
+alias ez="eza -l"
 
 alias cp='cp -i'
 alias mv='mv -i'
@@ -191,6 +194,23 @@ alias mkdir='mkdir -pv'
 
 # Safe alternatives
 command -v trash >/dev/null 2>&1 && alias rm='trash'
+
+# alias chmod commands
+alias mx='chmod a+x'
+alias 000='chmod -R 000'
+alias 644='chmod -R 644'
+alias 666='chmod -R 666'
+alias 755='chmod -R 755'
+alias 777='chmod -R 777'
+
+# Search command line history
+alias h="history | grep "
+
+# Search files in the current folder
+alias f="find . | grep "
+
+# To see if a command is aliased, a file, or a built-in command
+alias checkcommand="type -t"
 
 #######################################################
 # ALIASES - TEXT PROCESSING
@@ -216,6 +236,25 @@ alias ps='ps auxf'
 alias psg='ps aux | grep'
 alias top='htop'
 alias ports='netstat -tulanp'
+alias topcpu="/bin/ps -eo pcpu,pid,user,args | sort -k 1 -r | head -10"
+
+# Show open ports
+alias openports='netstat -nape --inet'
+
+# Alias's for safe and forced reboots
+alias rebootsafe='sudo shutdown -r now'
+alias rebootforce='sudo shutdown -r -n now'
+
+# Alias's to show disk space and space used in a folder
+alias diskspace="du -S | sort -n -r |more"
+alias folders='du -h --max-depth=1'
+alias folderssort='find . -maxdepth 1 -type d -print0 | xargs -0 du -sk | sort -rn'
+alias tree='tree -CAhF --dirsfirst'
+alias treed='tree -CAFd'
+alias mountedinfo='df -hT'
+
+# Show all logs in /var/log
+alias logs="sudo find /var/log -type f -exec file {} \; | grep 'text' | cut -d' ' -f1 | sed -e's/:$//g' | grep -v '[0-9]$' | xargs tail -f"
 
 #######################################################
 # ALIASES - PACKAGE MANAGEMENT
@@ -249,6 +288,7 @@ esac
 
 alias vim='nvim'
 alias vi='nvim'
+alias v='nvim'
 alias edit='$EDITOR'
 
 # Git shortcuts
@@ -259,6 +299,18 @@ alias gc='git commit'
 alias gp='git push'
 alias gl='git log --oneline'
 alias gd='git diff'
+alias gcon='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
+alias glog="git log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --branches"
+
+# Lazygit
+alias lg="lazygit"
+
+# Tmux
+alias tls="tmux ls"
+alias tmk="tmux kill-session -t"
+
+# SHA1
+alias sha1='openssl sha1'
 
 # Quick commit
 gcom() {
@@ -279,6 +331,13 @@ alias dc='docker-compose'
 alias dps='docker ps'
 alias di='docker images'
 alias dclean='docker system prune -af'
+
+# alias to cleanup unused docker containers, images, networks, and volumes
+alias docker-clean=' \
+  docker container prune -f ; \
+  docker image prune -f ; \
+  docker network prune -f ; \
+  docker volume prune -f '
 
 #######################################################
 # ALIASES - NETWORKING

@@ -225,6 +225,32 @@ fi
     rm -rf "$temp_dir"
 }
 
+install_fira_font() {
+    local font_name="FiraCode Nerd Font"
+    
+    if fc-list | grep -qi "fira"; then
+        log_info "Fira font already installed"
+        return 0
+fi
+    log_info "Installing $font_name..."
+    
+    local font_url="https://github.com/ryanoasis/nerd-fonts/releases/latest/download/FiraCode.zip"
+    local temp_dir
+    temp_dir=$(mktemp -d)
+    
+    if wget -q "$font_url" -O "$temp_dir/FiraCode.zip"; then
+        unzip -q "$temp_dir/FiraCode.zip" -d "$temp_dir"
+        mkdir -p "$FONT_DIR/FiraCode"
+        find "$temp_dir" -name "*.ttf" -exec mv {} "$FONT_DIR/FiraCode/" \;
+        fc-cache -fv >/dev/null 2>&1
+        log_success "Font installed successfully"
+    else
+        log_warning "Failed to download font"
+    fi
+    
+    rm -rf "$temp_dir"
+}
+
 install_starship() {
     if command_exists starship; then
         log_info "Starship already installed"
@@ -274,23 +300,6 @@ install_zoxide() {
         return 1
     fi
 }
-
-# # Configuration functions
-# setup_fastfetch_config() {
-#     local user_home
-#     user_home=$(get_user_home)
-#     local fastfetch_dir="$user_home/.config/fastfetch"
-#     local config_file="$fastfetch_dir/config.jsonc"
-#     
-#     mkdir -p "$fastfetch_dir"
-#     
-#     if [ -f "$SCRIPT_DIR/config.jsonc" ]; then
-#         ln -sf "$SCRIPT_DIR/config.jsonc" "$config_file"
-#         log_success "Fastfetch config linked"
-#     else
-#         log_warning "Fastfetch config file not found"
-#     fi
-# }
 
 setup_bash_config() {
     local user_home
@@ -351,6 +360,7 @@ main() {
     # Installation phase
     install_packages || exit 1
     install_nerd_font
+    install_fira_font
     install_starship || exit 1
     install_fzf || exit 1
     install_zoxide || exit 1

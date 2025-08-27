@@ -6,9 +6,6 @@
 # INITIALIZATION
 #######################################################
 
-# Display system info if fastfetch is available
-command -v fastfetch >/dev/null 2>&1 && fastfetch
-
 # Source system-wide bash configuration
 [[ -f /etc/bashrc ]] && source /etc/bashrc
 
